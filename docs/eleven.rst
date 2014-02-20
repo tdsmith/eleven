@@ -1,9 +1,6 @@
 eleven package
 ==============
 
-Submodules
-----------
-
 Module contents
 ---------------
 

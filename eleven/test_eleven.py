@@ -4,6 +4,7 @@ import unittest
 from eleven import *
 from types import *
 from sys import stdout
+import os
 import pandas as pd
 
 mean = lambda seq: float(sum(seq))/len(seq)
@@ -71,7 +72,7 @@ class TestAverage(unittest.TestCase):
 
 class TestRankGenes(unittest.TestCase):
     def setUp(self):
-        with open('test/vandesompele-2002-cq.txt') as f:
+        with open(os.path.join(os.path.dirname(__file__), 'test/vandesompele-2002-cq.txt')) as f:
             buf = f.readlines()
         self.gene_names = buf[0][:-1].split('\t')[2:]
         # slicing to cut off newlines on each line and skip header row

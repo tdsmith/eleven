@@ -3,6 +3,8 @@ Tim D. Smith, [@biotimylated](https://twitter.com/biotimylated)
 
 Eleven is a Python library for performing multi-gene RT-qPCR gene expression normalization. It is a free, open-source implementation of the [GeNorm algorithm](http://dx.doi.org/10.1186/gb-2002-3-7-research0034) described by Vandesompele et al. in 2002.
 
+[Documentation](http://eleven.readthedocs.org) is hosted at Read the Docs.
+
 ## How do I use eleven?
 
 Eleven requires Python 2.7. Earlier versions will not be supported. Python 3.x support is on the roadmap. You will need a Scientific Python stack, including pandas and scipy. If you don't have these, you can install the free version of the [Anaconda environment](https://store.continuum.io/cshop/anaconda/), which has everything you need.
