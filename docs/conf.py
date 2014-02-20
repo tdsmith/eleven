@@ -14,6 +14,12 @@
 
 import sys
 import os
+import mock
+
+MOCK_MODULES = ['numpy', 'scipy', 'scipy.stats', 'scipy.stats.mstats', 'pandas']
+
+for mod in MOCK_MODULES:
+    sys.modules[mod] = mock.Mock()
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
