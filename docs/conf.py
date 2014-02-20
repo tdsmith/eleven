@@ -26,6 +26,12 @@ class Mock(object):
     def __call__(self, *args, **kwargs):
         return Mock()
 
+    def __div__(self, other):
+        pass
+
+    def __truediv__(self, other):
+        pass
+
     @classmethod
     def __getattr__(cls, name):
         if name in ('__file__', '__path__'):
