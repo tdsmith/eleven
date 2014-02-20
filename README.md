@@ -59,5 +59,5 @@ There are other options in R; [SLqPCR](http://www.bioconductor.org/packages/deve
 
 PCR is amplification based. [Our amplifier goes to 11.](https://en.wikipedia.org/wiki/Up_to_eleven)
 
-![Amplifier dials, going to 11](//raw.github.com/tdsmith/eleven/master/docs/_static/eleven.jpg)
+![Amplifier dials, going to 11](https://raw.github.com/tdsmith/eleven/master/docs/_static/eleven.jpg)
 
