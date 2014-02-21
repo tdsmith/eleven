@@ -9,6 +9,8 @@ Eleven is a Python library for performing multi-gene RT-qPCR gene expression nor
 
 Eleven requires Python 2.7. Earlier versions will not be supported. Python 3.x support is on the roadmap. You will need a Scientific Python stack, including pandas and scipy. If you don't have these, you can install the free version of the [Anaconda environment](https://store.continuum.io/cshop/anaconda/), which has everything you need.
 
+Install eleven with `pip install eleven`.
+
 A sample analysis session looks like this:
 
     # Read PCR data into a pandas DataFrame. You want a data file where each
