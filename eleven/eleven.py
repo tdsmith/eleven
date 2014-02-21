@@ -44,7 +44,7 @@ def validate_sample_frame(sample_frame):
         raise ValueError("Expected Cq column to have float type; has type {} instead".format(str(sample_frame['Cq'].dtype)))
     return True
 
-def censor_background(sample_frame, ntc_samples, margin):
+def censor_background(sample_frame, ntc_samples=['NTC'], margin=log2(10)):
     """Selects rows from the sample data frame that fall `margin` or greater
     cycles earlier than the NTC for that target. NTC wells are recognized by
     string matching against the Sample column.
@@ -67,7 +67,7 @@ def censor_background(sample_frame, ntc_samples, margin):
     censored = sample_frame.loc[ ~(sample_frame['Cq'] > (min_ntcs.loc[sample_frame['Target']] - margin)) ]
     return censored
 
-def expression_ddcq(sample_frame, ref_target, ref_sample, ntc_samples=['NTC'], ntc_margin=log2(10)):
+def expression_ddcq(sample_frame, ref_target, ref_sample):
     """Calculates expression of samples in a sample data frame relative to a
     single reference gene and reference sample using the ∆∆Cq method.
 
@@ -79,37 +79,31 @@ def expression_ddcq(sample_frame, ref_target, ref_sample, ntc_samples=['NTC'], n
     :param string ref_target: A string matching an entry of the Target column;
         the target to use as the reference target (e.g. 'Gapdh')
     :param string ref_sample: A string matching an entry of the Sample column.
-    :param iterable ntc_samples: An iterable of strings giving names from the
-        Sample column that should be treated as NTCs, e.g. ['NTC']. Pass [] to
-        disable background censoring.
-    :param float ntc_margin: How many cycles away from the NTC a sample must
-        be to be included in expression calculations.
     :return: a Series of expression values for each row of the sample data
         frame.
     :rtype: Series
     """
     # It might be more correct to replace asarray calls (to discard indexes)
     # with proper joins.
-    censored = censor_background(sample_frame, ntc_samples, ntc_margin)
   
-    ref_target_df = censored.ix[censored['Target'] == ref_target, ['Sample', 'Cq']]
+    ref_target_df = sample_frame.ix[sample_frame['Target'] == ref_target, ['Sample', 'Cq']]
     ref_target_grouped = ref_target_df.groupby('Sample')
     ref_target_mean_by_sample = ref_target_grouped['Cq'].aggregate(average_cq)
-    ref_target_mean_list = ref_target_mean_by_sample.ix[censored['Sample']]
+    ref_target_mean_list = ref_target_mean_by_sample.ix[sample_frame['Sample']]
     ref_target_delta = asarray(ref_target_mean_list - ref_target_mean_by_sample[ref_sample])
 
-    ref_sample_df = censored.ix[censored['Sample'] == ref_sample, ['Target', 'Cq']]
+    ref_sample_df = sample_frame.ix[sample_frame['Sample'] == ref_sample, ['Target', 'Cq']]
     ref_sample_grouped = ref_sample_df.groupby('Target')
     ref_sample_mean_by_target = ref_sample_grouped['Cq'].aggregate(average_cq)
-    ref_sample_delta = asarray(censored['Cq'] - asarray(ref_sample_mean_by_target.ix[censored['Target']]))
+    ref_sample_delta = asarray(sample_frame['Cq'] - asarray(ref_sample_mean_by_target.ix[sample_frame['Target']]))
 
     rel_exp = pd.Series(
             power(2, ref_target_delta - ref_sample_delta),
-            index = censored.index)
+            index = sample_frame.index)
 
     return rel_exp
     
-def expression_nf(sample_frame, nf_n, ref_sample, ntc_samples=['NTC'], ntc_margin=log2(10)):
+def expression_nf(sample_frame, nf_n, ref_sample):
     """Calculates expression of samples in a sample data frame relative to
     pre-computed normalization factors.
 
@@ -121,21 +115,15 @@ def expression_nf(sample_frame, nf_n, ref_sample, ntc_samples=['NTC'], ntc_margi
         You probably got this from `compute_nf`.
     :param string ref_sample: The name of the sample to normalize against,
         which should match a value in the sample_frame Sample column.
-    :param iterable ntc_samples: An iterable of strings giving names from the
-        Sample column that should be treated as NTCs, e.g. ['NTC']. Pass [] to
-        disable background censoring.
-    :param float ntc_margin: How many cycles away from the NTC a sample must
-        be to be included in expression calculations.
     :return: a Series of expression values for each row in the sample data
         frame.
     :rtype: Series
     """
-    censored = censor_background(sample_frame, ntc_samples, ntc_margin)
-    ref_sample_df = censored.ix[censored['Sample'] == ref_sample, ['Target', 'Cq']]
+    ref_sample_df = sample_frame.ix[sample_frame['Sample'] == ref_sample, ['Target', 'Cq']]
     ref_sample_cq = ref_sample_df.groupby('Target')['Cq'].aggregate(average_cq)
 
-    delta = -censored['Cq'] + asarray(ref_sample_cq.ix[censored['Target']])
-    rel = power(2, delta) / asarray(nf_n.ix[censored['Sample']])
+    delta = -sample_frame['Cq'] + asarray(ref_sample_cq.ix[sample_frame['Target']])
+    rel = power(2, delta) / asarray(nf_n.ix[sample_frame['Sample']])
     return rel
 
 def collect_expression(sample_frame, ref_targets, ref_sample):

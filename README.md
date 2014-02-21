@@ -53,7 +53,7 @@ Adding other algorithms isn't a priority for me but I'll gladly accept pull requ
 
 Eleven has a simple, clean interface and uses familiar data structures. Also, I think we're the only game in town for PCR analysis in Python.
 
-There are other options in R; [SLqPCR](http://www.bioconductor.org/packages/devel/bioc/html/SLqPCR.html) is probably the most kindred to eleven. [qpcR](http://www.dr-spiess.de/qpcR.html) does a number of very sophisticated things but I found it correspondingly mysterious. [But I don't like R](http://tim-smith.us/arrgh/).
+There are other options in R; [SLqPCR](http://www.bioconductor.org/packages/devel/bioc/html/SLqPCR.html) is probably the most kindred to eleven. [qpcR](http://www.dr-spiess.de/qpcR.html) does a number of very sophisticated things but I found it correspondingly mysterious. [But, to be fair, I don't like R](http://tim-smith.us/arrgh/).
 
 ## Why is it named eleven?
 
